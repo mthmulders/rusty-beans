@@ -8,6 +8,19 @@ use std::io::BufReader;
 use std::{fs::File, io::Read};
 
 #[test]
+fn reads_java8_empty_class() {
+    setup_logging();
+    let class_file = reads_empty_class("res/java8/examples/EmptyClass.class");
+    assert_eq!(class_file.version.major, 52);
+}
+#[test]
+fn reads_java11_empty_class() {
+    setup_logging();
+    let class_file = reads_empty_class("res/java11/examples/EmptyClass.class");
+    assert_eq!(class_file.version.major, 55);
+}
+
+#[test]
 fn reads_java17_empty_class() {
     setup_logging();
     let class_file = reads_empty_class("res/java17/examples/EmptyClass.class");
