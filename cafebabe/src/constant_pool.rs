@@ -46,7 +46,7 @@ fn read_constant_pool_entry_name_type_descriptor(
     from_idx: usize,
 ) -> Result<(ConstantPoolEntry, usize), ClassFileError> {
     let class_name_ref = to_u16(data, from_idx, from_idx + 1);
-    let type_descriptor_ref = to_u16(data, from_idx + 1, from_idx + 2);
+    let type_descriptor_ref = to_u16(data, from_idx + 2, from_idx + 3);
     debug!(
         "found name and type descriptor; class_name_ref={class_name_ref}, type_descriptor_ref={type_descriptor_ref}"
     );
@@ -59,7 +59,7 @@ fn read_constant_pool_entry_method_ref(
     from_idx: usize,
 ) -> Result<(ConstantPoolEntry, usize), ClassFileError> {
     let class_ref = to_u16(data, from_idx, from_idx + 1);
-    let name_type_ref = to_u16(data, from_idx + 1, from_idx + 2);
+    let name_type_ref = to_u16(data, from_idx + 2, from_idx + 3);
     debug!("found method ref; class_ref={class_ref}, name_type_ref={name_type_ref}");
 
     Ok((ConstantPoolEntry {}, from_idx + 4))
@@ -88,7 +88,7 @@ fn read_constant_pool_entry_string(
     match str::from_utf8(content) {
         Ok(value) => {
             debug!("found string; value={value}");
-            Ok((ConstantPoolEntry {}, from_idx + usize::from(size)))
+            Ok((ConstantPoolEntry {}, from_idx + 2 + usize::from(size)))
         }
         Err(error) => {
             dbg!(error);
