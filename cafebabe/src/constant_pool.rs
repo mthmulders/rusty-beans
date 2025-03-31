@@ -127,8 +127,7 @@ fn read_constant_pool_entry(
         }
         _ => {
             debug!("unknown constant pool entry; tag={tag}");
-            Ok((ConstantPoolEntry::Empty {}, 0))
-            // Err(ClassFileError::UnknownConstantPoolEntryTag)
+            Err(ClassFileError::UnknownConstantPoolEntryTag)
         }
     }
 }
