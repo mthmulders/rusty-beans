@@ -42,7 +42,7 @@ fn reads_empty_class(path: &str) -> ClassFile {
         .read_to_end(&mut data)
         .expect("Can't read class file into memory");
 
-    let result = read_class_data(data);
+    let result = read_class_data(&data);
 
     assert_eq!(result.is_ok(), true);
 

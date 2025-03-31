@@ -32,7 +32,7 @@ fn to_u16(bytes: &[u8], start: usize, end: usize) -> u16 {
 }
 
 fn read_constant_pool_entry_class_ref(
-    data: &Vec<u8>,
+    data: &[u8],
     from_idx: usize,
 ) -> Result<(ConstantPoolEntry, usize), ClassFileError> {
     let class_ref = to_u16(data, from_idx, from_idx + 1);
@@ -42,7 +42,7 @@ fn read_constant_pool_entry_class_ref(
 }
 
 fn read_constant_pool_entry_name_type_descriptor(
-    data: &Vec<u8>,
+    data: &[u8],
     from_idx: usize,
 ) -> Result<(ConstantPoolEntry, usize), ClassFileError> {
     let class_name_ref = to_u16(data, from_idx, from_idx + 1);
@@ -55,7 +55,7 @@ fn read_constant_pool_entry_name_type_descriptor(
 }
 
 fn read_constant_pool_entry_method_ref(
-    data: &Vec<u8>,
+    data: &[u8],
     from_idx: usize,
 ) -> Result<(ConstantPoolEntry, usize), ClassFileError> {
     let class_ref = to_u16(data, from_idx, from_idx + 1);
@@ -66,7 +66,7 @@ fn read_constant_pool_entry_method_ref(
 }
 
 fn read_constant_pool_entry_float(
-    data: &Vec<u8>,
+    data: &[u8],
     from_idx: usize,
 ) -> Result<(ConstantPoolEntry, usize), ClassFileError> {
     // 4 bytes with a 32-bit single-precision IEEE 754 floating-point number
@@ -80,10 +80,10 @@ fn read_constant_pool_entry_float(
 }
 
 fn read_constant_pool_entry_string(
-    data: &Vec<u8>,
+    data: &[u8],
     from_idx: usize,
 ) -> Result<(ConstantPoolEntry, usize), ClassFileError> {
-    let size = to_u16(&data, from_idx, from_idx + 1);
+    let size = to_u16(data, from_idx, from_idx + 1);
     let content = &data[from_idx + 2..from_idx + 2 + usize::from(size)];
     match str::from_utf8(content) {
         Ok(value) => {
@@ -98,7 +98,7 @@ fn read_constant_pool_entry_string(
 }
 
 fn read_constant_pool_entry(
-    data: &Vec<u8>,
+    data: &[u8],
     from_idx: usize,
 ) -> Result<(ConstantPoolEntry, usize), ClassFileError> {
     let tag = usize::from(data[from_idx]);
@@ -124,7 +124,7 @@ fn read_constant_pool_entry(
     }
 }
 
-pub fn read_constant_pool(data: &Vec<u8>) -> Result<(ConstantPool, usize), ClassFileError> {
+pub fn read_constant_pool(data: &[u8]) -> Result<(ConstantPool, usize), ClassFileError> {
     let pool_size = u16::from_be_bytes([data[8], data[9]]);
     debug!("start reading constant pool; expected_size={pool_size}");
 
