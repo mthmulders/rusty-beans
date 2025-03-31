@@ -1,7 +1,7 @@
 use std::result::Result;
 
+use crate::constant_pool::types::Version;
 use crate::errors::ClassFileError;
-use crate::types::Version;
 
 pub fn read_version(data: &[u8]) -> Result<Version, ClassFileError> {
     let minor = u16::from_be_bytes([data[4], data[5]]);

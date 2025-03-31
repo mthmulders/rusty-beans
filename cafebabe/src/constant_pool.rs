@@ -1,10 +1,12 @@
 use std::result::Result;
 use std::str;
 
+pub use crate::constant_pool::types::ConstantPoolEntry;
 use crate::errors::ClassFileError;
-use crate::types::{ConstantPool, ConstantPoolEntry};
 
 use log::debug;
+
+pub mod types;
 
 const TAG_STRING: usize = 1;
 const TAG_INTEGER: usize = 3;
