@@ -46,5 +46,5 @@ fn reads_empty_class(path: &str) -> ClassFile {
 
     assert_eq!(result.is_ok(), true);
 
-    return result.unwrap();
+    result.unwrap()
 }
