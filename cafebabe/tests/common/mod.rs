@@ -1,5 +1,5 @@
-use std::sync::Once;
 use simplelog::{ColorChoice, CombinedLogger, Config, LevelFilter, TermLogger, TerminalMode};
+use std::sync::Once;
 
 static LOGGING_STATE: Once = Once::new();
 
