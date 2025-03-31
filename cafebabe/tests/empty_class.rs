@@ -1,5 +1,5 @@
-use cafebabe::read_class_data;
-use cafebabe::types::ClassFile;
+use cafebabe::constant_pool::ConstantPoolEntry;
+use cafebabe::{ClassFile, read_class_data};
 use common::setup_logging;
 
 mod common;

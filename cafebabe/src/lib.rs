@@ -1,12 +1,12 @@
-mod constant_pool;
+pub mod constant_pool;
 mod errors;
-pub mod types;
+mod types;
 mod version;
 
 use std::result::Result;
 
 use errors::ClassFileError;
-use types::{AccessFlags, ClassDefinition, ClassFile};
+pub use types::{AccessFlags, ClassDefinition, ClassFile};
 
 const CAFEBABE: u32 = u32::from_be_bytes([0xca, 0xfe, 0xba, 0xbe]);
 
