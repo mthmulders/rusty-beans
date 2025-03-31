@@ -47,6 +47,6 @@ pub struct Version {
 
 #[derive(Debug, PartialEq)]
 pub struct MethodRef {
-    class_ref: usize,
-    name_and_type_desc: usize,
+    pub class_ref: u16,
+    pub name_type_ref: u16,
 }

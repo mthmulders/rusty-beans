@@ -5,6 +5,7 @@ pub use crate::constant_pool::types::ConstantPoolEntry;
 use crate::errors::ClassFileError;
 
 use log::debug;
+use crate::constant_pool::types::MethodRef;
 
 pub mod types;
 
@@ -68,7 +69,8 @@ fn read_constant_pool_entry_method_ref(
     let name_type_ref = to_u16(data, from_idx + 2, from_idx + 3);
     debug!("found method ref; class_ref={class_ref}, name_type_ref={name_type_ref}");
 
-    Ok((ConstantPoolEntry::Empty {}, from_idx + 4))
+    let method_ref = MethodRef { class_ref, name_type_ref };
+    Ok((ConstantPoolEntry::MethodRef(method_ref), from_idx + 4))
 }
 
 fn read_constant_pool_entry_float(

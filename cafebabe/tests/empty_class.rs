@@ -43,7 +43,23 @@ fn validate_constant_pool(class_file: &ClassFile) {
     let items = &pool.items;
     assert_eq!(items.len(), 12);
     items.iter().for_each(|item| match item {
-        ConstantPoolEntry::String(value) => assert_eq!(value.len() > 0, true),
+        ConstantPoolEntry::String(value) => assert_eq!(
+            value.len() > 0,
+            true,
+            "Unexpected empty string in constant pool"
+        ),
+        ConstantPoolEntry::MethodRef(methodRef) => {
+            assert_eq!(
+                methodRef.class_ref < items.len() as u16,
+                true,
+                "Class reference outside of constant pool"
+            );
+            assert_eq!(
+                methodRef.name_type_ref < items.len() as u16,
+                true,
+                "Name and type reference outside of constant pool"
+            );
+        }
         _ => (),
     })
 }
