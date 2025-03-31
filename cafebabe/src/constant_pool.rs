@@ -111,7 +111,7 @@ fn read_constant_pool_entry(
     from_idx: usize,
 ) -> Result<(ConstantPoolEntry, usize), ClassFileError> {
     let tag = usize::from(data[from_idx]);
-    // debug!("next contant pool entry; tag={tag}, from_idx={from_idx}");
+    // debug!("next constant pool entry; tag={tag}, from_idx={from_idx}");
     match tag {
         TAG_STRING => read_constant_pool_entry_string(data, from_idx + 1),
         // TAG_INTEGER => Ok((ConstantPoolEntry {}, from_idx + 4)),
