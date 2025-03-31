@@ -147,5 +147,5 @@ pub fn read_constant_pool(data: &[u8]) -> Result<(ConstantPool, usize), ClassFil
         from_idx = item.1;
     }
 
-    Ok((ConstantPool { items: vec![] }, 0))
+    Ok((ConstantPool { items }, 0))
 }
