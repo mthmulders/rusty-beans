@@ -126,7 +126,7 @@ fn read_constant_pool_entry(
 
 pub fn read_constant_pool(data: &Vec<u8>) -> Result<(ConstantPool, usize), ClassFileError> {
     let pool_size = u16::from_be_bytes([data[8], data[9]]);
-    dbg!(pool_size);
+    debug!("start reading constant pool; expected_size={pool_size}");
 
     let mut items: Vec<ConstantPoolEntry> = Vec::with_capacity(usize::from(pool_size - 1));
     let mut from_idx = 10;
