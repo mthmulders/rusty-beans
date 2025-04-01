@@ -10,8 +10,8 @@ pub enum ConstantPoolEntry {
     Long(),
     /// An entry holding a `double`.
     Double(),
-    /// An entry holding a reference to a class.
-    Class(),
+    /// An entry holding a reference to a class. Points to a String entry holding the name of the class.
+    Class(u16),
     /// An entry holding a reference to a [`String`] entry.
     StringRef(),
     /// An entry holding a reference to a field in a class.
@@ -21,7 +21,7 @@ pub enum ConstantPoolEntry {
     /// An entry holding a reference to a method in an interface.
     InterfaceMethodRef(),
     /// An entry describing a name and a type.
-    NameTypeDescriptor(),
+    NameTypeDescriptor(NameTypeDescriptor),
     /// An entry holding a method handle.
     MethodHandle(),
     /// An entry holding a type description of a method.
@@ -49,4 +49,10 @@ pub struct Version {
 pub struct MethodRef {
     pub class_ref: u16,
     pub name_type_ref: u16,
+}
+
+#[derive(Debug, PartialEq)]
+pub struct NameTypeDescriptor {
+    pub name_ref: u16,
+    pub type_descriptor_ref: u16,
 }

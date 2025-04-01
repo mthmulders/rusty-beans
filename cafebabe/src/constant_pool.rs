@@ -1,11 +1,12 @@
 use std::result::Result;
+use std::slice::Iter;
 use std::str;
 
 pub use crate::constant_pool::types::ConstantPoolEntry;
 use crate::errors::ClassFileError;
 
-use log::debug;
-use crate::constant_pool::types::MethodRef;
+use crate::constant_pool::types::{MethodRef, NameTypeDescriptor};
+use log::{debug, error};
 
 pub mod types;
 
@@ -28,7 +29,45 @@ const TAG_MODULE: usize = 19;
 const TAG_PACKAGE: usize = 20;
 
 pub struct ConstantPool {
-    pub items: Vec<ConstantPoolEntry>,
+    items: Vec<ConstantPoolEntry>,
+}
+
+impl ConstantPool {
+    pub fn get_entry(&self, index: usize) -> &ConstantPoolEntry {
+        &self.items[index]
+    }
+
+    pub fn items(&self) -> Iter<ConstantPoolEntry> {
+        self.items.iter()
+    }
+
+    pub fn len(&self) -> usize {
+        self.items.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+
+    pub fn string_entry(&self, index: usize) -> Result<&String, ClassFileError> {
+        match &self.items[index] {
+            ConstantPoolEntry::String(value) => Ok(value),
+            other => {
+                error!("Expected String at index {:?}, found {:?}", index, other);
+                Err(ClassFileError::UnexpectedConstantPoolType)
+            }
+        }
+    }
+
+    pub fn class_ref_entry(&self, index: usize) -> Result<u16, ClassFileError> {
+        match &self.items[index] {
+            ConstantPoolEntry::Class(value) => Ok(*value),
+            other => {
+                error!("Expected Class at index {:?}, found {:?}", index, other);
+                Err(ClassFileError::UnexpectedConstantPoolType)
+            }
+        }
+    }
 }
 
 fn to_u16(bytes: &[u8], start: usize, end: usize) -> u16 {
@@ -45,20 +84,27 @@ fn read_constant_pool_entry_class_ref(
     let class_ref = to_u16(data, from_idx, from_idx + 1);
     debug!("found class ref; class_ref={class_ref}");
 
-    Ok((ConstantPoolEntry::Empty {}, from_idx + 2))
+    Ok((ConstantPoolEntry::Class(class_ref), from_idx + 2))
 }
 
 fn read_constant_pool_entry_name_type_descriptor(
     data: &[u8],
     from_idx: usize,
 ) -> Result<(ConstantPoolEntry, usize), ClassFileError> {
-    let class_name_ref = to_u16(data, from_idx, from_idx + 1);
+    let name_ref = to_u16(data, from_idx, from_idx + 1);
     let type_descriptor_ref = to_u16(data, from_idx + 2, from_idx + 3);
     debug!(
-        "found name and type descriptor; class_name_ref={class_name_ref}, type_descriptor_ref={type_descriptor_ref}"
+        "found name and type descriptor; class_name_ref={name_ref}, type_descriptor_ref={type_descriptor_ref}"
     );
 
-    Ok((ConstantPoolEntry::Empty {}, from_idx + 4))
+    let descriptor = NameTypeDescriptor {
+        name_ref,
+        type_descriptor_ref,
+    };
+    Ok((
+        ConstantPoolEntry::NameTypeDescriptor(descriptor),
+        from_idx + 4,
+    ))
 }
 
 fn read_constant_pool_entry_method_ref(
@@ -69,7 +115,10 @@ fn read_constant_pool_entry_method_ref(
     let name_type_ref = to_u16(data, from_idx + 2, from_idx + 3);
     debug!("found method ref; class_ref={class_ref}, name_type_ref={name_type_ref}");
 
-    let method_ref = MethodRef { class_ref, name_type_ref };
+    let method_ref = MethodRef {
+        class_ref,
+        name_type_ref,
+    };
     Ok((ConstantPoolEntry::MethodRef(method_ref), from_idx + 4))
 }
 

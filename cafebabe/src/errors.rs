@@ -8,4 +8,5 @@ pub enum ClassFileError {
     MajorVersionTooHigh,
     UnknownConstantPoolEntryTag,
     InvalidConstantPoolContent,
+    UnexpectedConstantPoolType,
 }
