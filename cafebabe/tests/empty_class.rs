@@ -64,7 +64,7 @@ fn validate_constant_pool(class_file: ClassFile) {
                     "Name and type reference outside of constant pool"
                 );
             }
-            ConstantPoolEntry::Class(class_ref) => {
+            ConstantPoolEntry::ClassRef(class_ref) => {
                 assert_string_class_name(&pool, *class_ref);
             }
             ConstantPoolEntry::NameTypeDescriptor(name_type_descriptor) => {

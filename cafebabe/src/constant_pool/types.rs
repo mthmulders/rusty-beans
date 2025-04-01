@@ -11,7 +11,7 @@ pub enum ConstantPoolEntry {
     /// An entry holding a `double`.
     Double(),
     /// An entry holding a reference to a class. Points to a String entry holding the name of the class.
-    Class(u16),
+    ClassRef(u16),
     /// An entry holding a reference to a [`String`] entry.
     StringRef(),
     /// An entry holding a reference to a field in a class.

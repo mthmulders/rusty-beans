@@ -61,7 +61,7 @@ impl ConstantPool {
 
     pub fn class_ref_entry(&self, index: usize) -> Result<u16, ClassFileError> {
         match &self.items[index] {
-            ConstantPoolEntry::Class(value) => Ok(*value),
+            ConstantPoolEntry::ClassRef(value) => Ok(*value),
             other => {
                 error!("Expected Class at index {:?}, found {:?}", index, other);
                 Err(ClassFileError::UnexpectedConstantPoolType)
@@ -84,7 +84,7 @@ fn read_constant_pool_entry_class_ref(
     let class_ref = to_u16(data, from_idx, from_idx + 1);
     debug!("found class ref; class_ref={class_ref}");
 
-    Ok((ConstantPoolEntry::Class(class_ref), from_idx + 2))
+    Ok((ConstantPoolEntry::ClassRef(class_ref), from_idx + 2))
 }
 
 fn read_constant_pool_entry_name_type_descriptor(
