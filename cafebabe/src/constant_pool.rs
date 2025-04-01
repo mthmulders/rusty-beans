@@ -11,22 +11,22 @@ use log::{debug, error};
 pub mod types;
 
 const TAG_STRING: usize = 1;
-const TAG_INTEGER: usize = 3;
-const TAG_FLOAT: usize = 4;
-const TAG_LONG: usize = 5;
-const TAG_DOUBLE: usize = 6;
+// const TAG_INTEGER: usize = 3;
+// const TAG_FLOAT: usize = 4;
+// const TAG_LONG: usize = 5;
+// const TAG_DOUBLE: usize = 6;
 const TAG_CLASS_REF: usize = 7;
-const TAG_STRING_REF: usize = 8;
-const TAG_FIELD_REF: usize = 9;
+// const TAG_STRING_REF: usize = 8;
+// const TAG_FIELD_REF: usize = 9;
 const TAG_METHOD_REF: usize = 10;
-const TAG_INTERFACE_METHOD_REF: usize = 11;
+// const TAG_INTERFACE_METHOD_REF: usize = 11;
 const TAG_NAME_TYPE_DESCRIPTOR: usize = 12;
-const TAG_METHOD_HANDLE: usize = 15;
-const TAG_METHOD_TYPE: usize = 16;
-const TAG_DYNAMIC: usize = 17;
-const TAG_INVOKE_DYNAMIC: usize = 18;
-const TAG_MODULE: usize = 19;
-const TAG_PACKAGE: usize = 20;
+// const TAG_METHOD_HANDLE: usize = 15;
+// const TAG_METHOD_TYPE: usize = 16;
+// const TAG_DYNAMIC: usize = 17;
+// const TAG_INVOKE_DYNAMIC: usize = 18;
+// const TAG_MODULE: usize = 19;
+// const TAG_PACKAGE: usize = 20;
 
 pub struct ConstantPool {
     items: Vec<ConstantPoolEntry>,
@@ -122,19 +122,19 @@ fn read_constant_pool_entry_method_ref(
     Ok((ConstantPoolEntry::MethodRef(method_ref), from_idx + 4))
 }
 
-fn read_constant_pool_entry_float(
-    data: &[u8],
-    from_idx: usize,
-) -> Result<(ConstantPoolEntry, usize), ClassFileError> {
-    // 4 bytes with a 32-bit single-precision IEEE 754 floating-point number
-    let bytes: [u8; 4] = data[from_idx..(from_idx + 4)]
-        .try_into()
-        .expect("incorrect length of slice");
-    let value = f32::from_be_bytes(bytes);
-    debug!("found float; value={value}");
-
-    Ok((ConstantPoolEntry::Empty {}, from_idx + 4))
-}
+// fn read_constant_pool_entry_float(
+//     data: &[u8],
+//     from_idx: usize,
+// ) -> Result<(ConstantPoolEntry, usize), ClassFileError> {
+//     // 4 bytes with a 32-bit single-precision IEEE 754 floating-point number
+//     let bytes: [u8; 4] = data[from_idx..(from_idx + 4)]
+//         .try_into()
+//         .expect("incorrect length of slice");
+//     let value = f32::from_be_bytes(bytes);
+//     debug!("found float; value={value}");
+//
+//     Ok((ConstantPoolEntry::Empty {}, from_idx + 4))
+// }
 
 fn read_constant_pool_entry_string(
     data: &[u8],
@@ -166,7 +166,7 @@ fn read_constant_pool_entry(
     match tag {
         TAG_STRING => read_constant_pool_entry_string(data, from_idx + 1),
         // TAG_INTEGER => Ok((ConstantPoolEntry {}, from_idx + 4)),
-        TAG_FLOAT => read_constant_pool_entry_float(data, from_idx + 1),
+        // TAG_FLOAT => read_constant_pool_entry_float(data, from_idx + 1),
         // TAG_LONG => Ok((ConstantPoolEntry {}, from_idx + 8)),
         // TAG_DOUBLE => Ok((ConstantPoolEntry {}, from_idx + 8)),
         TAG_CLASS_REF => read_constant_pool_entry_class_ref(data, from_idx + 1),
