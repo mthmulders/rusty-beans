@@ -108,7 +108,7 @@ fn assert_string_class_name(pool: &ConstantPool, idx: u16) -> () {
     );
 }
 
-fn reads_empty_class(path: &str) -> cafebabe::ClassFile {
+fn reads_empty_class(path: &str) -> ClassFile {
     let file = File::open(path).expect("Can't open class file");
     let mut reader = BufReader::new(file);
     let mut data: Vec<u8> = Vec::new();
