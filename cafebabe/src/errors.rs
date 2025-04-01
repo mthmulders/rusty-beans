@@ -9,4 +9,5 @@ pub enum ClassFileError {
     UnknownConstantPoolEntryTag,
     InvalidConstantPoolContent,
     UnexpectedConstantPoolType,
+    InvalidAccessFlags,
 }

@@ -1,10 +1,12 @@
 pub mod constant_pool;
 mod errors;
+mod shared;
 mod types;
 mod version;
 
 use std::result::Result;
 
+use crate::shared::to_u16;
 use errors::ClassFileError;
 pub use types::{AccessFlags, ClassDefinition, ClassFile};
 
@@ -23,14 +25,22 @@ fn read_magic_number(data: &[u8]) -> Result<(), ClassFileError> {
     }
 }
 
+fn read_access_flags(data: &[u8], start_idx: usize) -> Result<AccessFlags, ClassFileError> {
+    let access_flags = to_u16(data, start_idx, start_idx + 1);
+    match AccessFlags::from_bits(access_flags) {
+        Some(access_flags) => Ok(access_flags),
+        None => Err(ClassFileError::InvalidAccessFlags),
+    }
+}
+
 pub fn read_class_data(data: &[u8]) -> Result<ClassFile, ClassFileError> {
-    let _ = read_magic_number(data);
+    read_magic_number(data)?;
     let constant_pool = constant_pool::read_constant_pool(data)?;
 
     Ok(ClassFile {
         version: version::read_version(data)?,
         constant_pool: constant_pool.0,
-        access_flags: AccessFlags {},
+        access_flags: read_access_flags(data, constant_pool.1)?,
         class: ClassDefinition {
             name_idx: 0,
             super_idx: 0,

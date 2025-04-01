@@ -1,5 +1,5 @@
 use cafebabe::constant_pool::{ConstantPool, ConstantPoolEntry};
-use cafebabe::{ClassFile, read_class_data};
+use cafebabe::{AccessFlags, ClassFile, read_class_data};
 use common::setup_logging;
 
 mod common;
@@ -7,19 +7,23 @@ mod common;
 use std::io::BufReader;
 use std::{fs::File, io::Read};
 
+static ACCESS_FLAGS: AccessFlags = AccessFlags::ACC_PUBLIC;
+
 #[test]
 fn reads_java8_empty_class() {
     setup_logging();
     let class_file = reads_empty_class("res/java8/examples/EmptyClass.class");
     assert_eq!(class_file.version.major, 52);
-    validate_constant_pool(class_file);
+    validate_constant_pool(&class_file);
+    validate_access_flags(&class_file);
 }
 #[test]
 fn reads_java11_empty_class() {
     setup_logging();
     let class_file = reads_empty_class("res/java11/examples/EmptyClass.class");
     assert_eq!(class_file.version.major, 55);
-    validate_constant_pool(class_file);
+    validate_constant_pool(&class_file);
+    validate_access_flags(&class_file);
 }
 
 #[test]
@@ -27,7 +31,8 @@ fn reads_java17_empty_class() {
     setup_logging();
     let class_file = reads_empty_class("res/java17/examples/EmptyClass.class");
     assert_eq!(class_file.version.major, 61);
-    validate_constant_pool(class_file);
+    validate_constant_pool(&class_file);
+    validate_access_flags(&class_file);
 }
 
 #[test]
@@ -35,11 +40,22 @@ fn reads_java21_empty_class() {
     setup_logging();
     let class_file = reads_empty_class("res/java21/examples/EmptyClass.class");
     assert_eq!(class_file.version.major, 65);
-    validate_constant_pool(class_file);
+    validate_constant_pool(&class_file);
+    validate_access_flags(&class_file);
 }
 
-fn validate_constant_pool(class_file: ClassFile) {
-    let pool = class_file.constant_pool;
+fn validate_access_flags(class_file: &ClassFile) {
+    let is_public = ACCESS_FLAGS.contains(AccessFlags::ACC_PUBLIC);
+    assert_eq!(
+        ACCESS_FLAGS.contains(AccessFlags::ACC_PUBLIC),
+        class_file.access_flags.contains(AccessFlags::ACC_PUBLIC),
+        "Expect class to be {}",
+        if is_public { "public" } else { "non-public" }
+    );
+}
+
+fn validate_constant_pool(class_file: &ClassFile) {
+    let pool = &class_file.constant_pool;
 
     assert_eq!(pool.len(), 12);
 
