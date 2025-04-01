@@ -6,6 +6,7 @@ pub use crate::constant_pool::types::ConstantPoolEntry;
 use crate::errors::ClassFileError;
 
 use crate::constant_pool::types::{MethodRef, NameTypeDescriptor};
+use crate::shared::to_u16;
 use log::{debug, error};
 
 pub mod types;
@@ -68,13 +69,6 @@ impl ConstantPool {
             }
         }
     }
-}
-
-fn to_u16(bytes: &[u8], start: usize, end: usize) -> u16 {
-    let input: [u8; 2] = bytes[start..end + 1]
-        .try_into()
-        .expect("incorrect length of slice");
-    u16::from_be_bytes(input)
 }
 
 fn read_constant_pool_entry_class_ref(
