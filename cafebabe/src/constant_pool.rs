@@ -74,7 +74,10 @@ impl ConstantPool {
         match &self.items[index] {
             ConstantPoolEntry::NameTypeDescriptor(value) => Ok(*value),
             other => {
-                error!("Expected NameTypeDescriptor at index {:?}, found {:?}", index, other);
+                error!(
+                    "Expected NameTypeDescriptor at index {:?}, found {:?}",
+                    index, other
+                );
                 Err(ClassFileError::UnexpectedConstantPoolType)
             }
         }
