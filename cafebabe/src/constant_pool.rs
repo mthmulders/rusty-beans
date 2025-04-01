@@ -33,24 +33,24 @@ pub struct ConstantPool {
 }
 
 impl ConstantPool {
-    pub fn get_entry(&self, index: usize) -> &ConstantPoolEntry {
-        &self.items[index]
+    pub fn get_entry(&self, index: u16) -> &ConstantPoolEntry {
+        &self.items[index as usize]
     }
 
     pub fn items(&self) -> Iter<ConstantPoolEntry> {
         self.items.iter()
     }
 
-    pub fn len(&self) -> usize {
-        self.items.len()
+    pub fn len(&self) -> u16 {
+        self.items.len() as u16
     }
 
     pub fn is_empty(&self) -> bool {
         self.len() == 0
     }
 
-    pub fn string_entry(&self, index: usize) -> Result<&String, ClassFileError> {
-        match &self.items[index] {
+    pub fn string_entry(&self, index: u16) -> Result<&String, ClassFileError> {
+        match &self.items[index as usize] {
             ConstantPoolEntry::String(value) => Ok(value),
             other => {
                 error!("Expected String at index {:?}, found {:?}", index, other);

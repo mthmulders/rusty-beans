@@ -59,7 +59,7 @@ fn validate_constant_pool(class_file: ClassFile) {
                 assert_string_class_name(&pool, class_idx);
                 // TODO assert items[method_ref.name_type_ref] is indeed a ref to a name and type
                 assert_eq!(
-                    method_ref.name_type_ref < pool.len() as u16,
+                    method_ref.name_type_ref < pool.len(),
                     true,
                     "Name and type reference outside of constant pool"
                 );
@@ -77,7 +77,7 @@ fn validate_constant_pool(class_file: ClassFile) {
 }
 
 fn assert_type_descriptor(pool: &ConstantPool, idx: u16) -> () {
-    let type_descriptor = pool.string_entry(idx as usize - 1).unwrap();
+    let type_descriptor = pool.string_entry(idx - 1).unwrap();
     assert_eq!(
         type_descriptor.contains("("),
         true,
@@ -91,7 +91,7 @@ fn assert_type_descriptor(pool: &ConstantPool, idx: u16) -> () {
 }
 
 fn assert_string_method_name(pool: &ConstantPool, idx: u16) -> () {
-    let method_name = pool.string_entry(idx as usize - 1).unwrap();
+    let method_name = pool.string_entry(idx - 1).unwrap();
     let is_constructor = "<init>".eq(method_name);
 
     assert_eq!(
@@ -100,7 +100,7 @@ fn assert_string_method_name(pool: &ConstantPool, idx: u16) -> () {
     );
 }
 fn assert_string_class_name(pool: &ConstantPool, idx: u16) -> () {
-    let class_name = pool.string_entry(idx as usize - 1).unwrap();
+    let class_name = pool.string_entry(idx - 1).unwrap();
     assert_eq!(
         class_name.contains('/'),
         true,
