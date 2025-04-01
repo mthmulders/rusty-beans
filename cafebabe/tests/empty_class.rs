@@ -73,12 +73,12 @@ fn validate_constant_pool(class_file: &ClassFile) {
                     .class_ref_entry(method_ref.class_ref as usize - 1)
                     .unwrap();
                 assert_string_class_name(&pool, class_idx);
-                // TODO assert items[method_ref.name_type_ref] is indeed a ref to a name and type
-                assert_eq!(
-                    method_ref.name_type_ref < pool.len(),
-                    true,
-                    "Name and type reference outside of constant pool"
-                );
+
+                let name_type_ref_idx = pool
+                    .name_type_entry(method_ref.name_type_ref as usize - 1)
+                    .unwrap();
+                assert_string_method_name(&pool, name_type_ref_idx.name_ref);
+                assert_type_descriptor(&pool, name_type_ref_idx.type_descriptor_ref);
             }
             ConstantPoolEntry::ClassRef(class_ref) => {
                 assert_string_class_name(&pool, *class_ref);

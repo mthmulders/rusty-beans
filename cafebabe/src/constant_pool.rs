@@ -69,6 +69,16 @@ impl ConstantPool {
             }
         }
     }
+
+    pub fn name_type_entry(&self, index: usize) -> Result<NameTypeDescriptor, ClassFileError> {
+        match &self.items[index] {
+            ConstantPoolEntry::NameTypeDescriptor(value) => Ok(*value),
+            other => {
+                error!("Expected NameTypeDescriptor at index {:?}, found {:?}", index, other);
+                Err(ClassFileError::UnexpectedConstantPoolType)
+            }
+        }
+    }
 }
 
 fn read_constant_pool_entry_class_ref(

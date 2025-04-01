@@ -51,7 +51,7 @@ pub struct MethodRef {
     pub name_type_ref: u16,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct NameTypeDescriptor {
     pub name_ref: u16,
     pub type_descriptor_ref: u16,
