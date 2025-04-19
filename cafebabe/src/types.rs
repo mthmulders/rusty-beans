@@ -25,7 +25,7 @@ bitflags! {
 }
 
 pub struct ClassDefinition {
-    pub name_idx: usize,
+    pub this_idx: usize,
     pub super_idx: usize,
 }
 

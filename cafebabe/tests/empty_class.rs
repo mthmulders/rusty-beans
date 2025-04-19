@@ -16,7 +16,10 @@ fn reads_java8_empty_class() {
     assert_eq!(class_file.version.major, 52);
     validate_constant_pool(&class_file);
     validate_access_flags(&class_file);
+    validate_class_name(&class_file);
+    validate_super_class_name(&class_file);
 }
+
 #[test]
 fn reads_java11_empty_class() {
     setup_logging();
@@ -24,6 +27,8 @@ fn reads_java11_empty_class() {
     assert_eq!(class_file.version.major, 55);
     validate_constant_pool(&class_file);
     validate_access_flags(&class_file);
+    validate_class_name(&class_file);
+    validate_super_class_name(&class_file);
 }
 
 #[test]
@@ -33,6 +38,8 @@ fn reads_java17_empty_class() {
     assert_eq!(class_file.version.major, 61);
     validate_constant_pool(&class_file);
     validate_access_flags(&class_file);
+    validate_class_name(&class_file);
+    validate_super_class_name(&class_file);
 }
 
 #[test]
@@ -42,16 +49,8 @@ fn reads_java21_empty_class() {
     assert_eq!(class_file.version.major, 65);
     validate_constant_pool(&class_file);
     validate_access_flags(&class_file);
-}
-
-fn validate_access_flags(class_file: &ClassFile) {
-    let is_public = ACCESS_FLAGS.contains(AccessFlags::ACC_PUBLIC);
-    assert_eq!(
-        ACCESS_FLAGS.contains(AccessFlags::ACC_PUBLIC),
-        class_file.access_flags.contains(AccessFlags::ACC_PUBLIC),
-        "Expect class to be {}",
-        if is_public { "public" } else { "non-public" }
-    );
+    validate_class_name(&class_file);
+    validate_super_class_name(&class_file);
 }
 
 fn validate_constant_pool(class_file: &ClassFile) {
@@ -92,6 +91,42 @@ fn validate_constant_pool(class_file: &ClassFile) {
     }
 }
 
+fn validate_access_flags(class_file: &ClassFile) {
+    let is_public = ACCESS_FLAGS.contains(AccessFlags::ACC_PUBLIC);
+    assert_eq!(
+        ACCESS_FLAGS.contains(AccessFlags::ACC_PUBLIC),
+        class_file.access_flags.contains(AccessFlags::ACC_PUBLIC),
+        "Expect class to be {}",
+        if is_public { "public" } else { "non-public" }
+    );
+}
+
+fn validate_class_name(class_file: &ClassFile) {
+    let class_ref_idx = class_file.class.this_idx;
+    let class_name_idx = class_file.constant_pool.class_ref_entry(class_ref_idx)
+        .unwrap();
+    let class_name = class_file.constant_pool.string_entry(class_name_idx)
+        .unwrap();
+    assert_eq!(
+        class_name,
+        "examples/EmptyClass",
+        "Expect class to be examples/EmptyClass"
+    );
+}
+
+fn validate_super_class_name(class_file: &ClassFile) {
+    let class_ref_idx = class_file.class.super_idx;
+    let class_name_idx = class_file.constant_pool.class_ref_entry(class_ref_idx)
+        .unwrap();
+    let class_name = class_file.constant_pool.string_entry(class_name_idx)
+        .unwrap();
+    assert_eq!(
+        class_name,
+        "java/lang/Object",
+        "Expect super class to be java/lang/Object"
+    );
+}
+
 fn assert_type_descriptor(pool: &ConstantPool, idx: u16) -> () {
     let type_descriptor = pool.string_entry(idx).unwrap();
     assert_eq!(
@@ -115,6 +150,7 @@ fn assert_string_method_name(pool: &ConstantPool, idx: u16) -> () {
         "Method name ref points to string in unexpected format"
     );
 }
+
 fn assert_string_class_name(pool: &ConstantPool, idx: u16) -> () {
     let class_name = pool.string_entry(idx).unwrap();
     assert_eq!(
