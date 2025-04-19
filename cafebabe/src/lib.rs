@@ -25,7 +25,10 @@ fn read_magic_number(data: &[u8]) -> Result<(), ClassFileError> {
     }
 }
 
-fn read_access_flags(data: &[u8], start_idx: usize) -> Result<(AccessFlags, usize), ClassFileError> {
+fn read_access_flags(
+    data: &[u8],
+    start_idx: usize,
+) -> Result<(AccessFlags, usize), ClassFileError> {
     let access_flags = to_u16(data, start_idx, start_idx + 1);
     match AccessFlags::from_bits(access_flags) {
         Some(access_flags) => Ok((access_flags, start_idx + 2)),
@@ -33,7 +36,10 @@ fn read_access_flags(data: &[u8], start_idx: usize) -> Result<(AccessFlags, usiz
     }
 }
 
-fn read_class_definition(data: &[u8], start_idx: usize) -> Result<(ClassDefinition, usize), ClassFileError> {
+fn read_class_definition(
+    data: &[u8],
+    start_idx: usize,
+) -> Result<(ClassDefinition, usize), ClassFileError> {
     let class_definition = ClassDefinition {
         this_idx: u16::from_be_bytes([data[start_idx], data[start_idx + 1]]) as usize,
         super_idx: u16::from_be_bytes([data[start_idx + 2], data[start_idx + 3]]) as usize,

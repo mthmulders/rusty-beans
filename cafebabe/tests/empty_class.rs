@@ -68,9 +68,7 @@ fn validate_constant_pool(class_file: &ClassFile) {
                 )
             }
             ConstantPoolEntry::MethodRef(method_ref) => {
-                let class_idx = pool
-                    .class_ref_entry(method_ref.class_ref as usize)
-                    .unwrap();
+                let class_idx = pool.class_ref_entry(method_ref.class_ref as usize).unwrap();
                 assert_string_class_name(&pool, class_idx);
 
                 let name_type_ref_idx = pool
@@ -103,26 +101,32 @@ fn validate_access_flags(class_file: &ClassFile) {
 
 fn validate_class_name(class_file: &ClassFile) {
     let class_ref_idx = class_file.class.this_idx;
-    let class_name_idx = class_file.constant_pool.class_ref_entry(class_ref_idx)
+    let class_name_idx = class_file
+        .constant_pool
+        .class_ref_entry(class_ref_idx)
         .unwrap();
-    let class_name = class_file.constant_pool.string_entry(class_name_idx)
+    let class_name = class_file
+        .constant_pool
+        .string_entry(class_name_idx)
         .unwrap();
     assert_eq!(
-        class_name,
-        "examples/EmptyClass",
+        class_name, "examples/EmptyClass",
         "Expect class to be examples/EmptyClass"
     );
 }
 
 fn validate_super_class_name(class_file: &ClassFile) {
     let class_ref_idx = class_file.class.super_idx;
-    let class_name_idx = class_file.constant_pool.class_ref_entry(class_ref_idx)
+    let class_name_idx = class_file
+        .constant_pool
+        .class_ref_entry(class_ref_idx)
         .unwrap();
-    let class_name = class_file.constant_pool.string_entry(class_name_idx)
+    let class_name = class_file
+        .constant_pool
+        .string_entry(class_name_idx)
         .unwrap();
     assert_eq!(
-        class_name,
-        "java/lang/Object",
+        class_name, "java/lang/Object",
         "Expect super class to be java/lang/Object"
     );
 }
