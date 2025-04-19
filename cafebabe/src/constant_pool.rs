@@ -35,7 +35,7 @@ pub struct ConstantPool {
 
 impl ConstantPool {
     pub fn get_entry(&self, index: u16) -> &ConstantPoolEntry {
-        &self.items[index as usize]
+        &self.items[(index - 1) as usize]
     }
 
     pub fn items(&self) -> Iter<ConstantPoolEntry> {
@@ -51,7 +51,7 @@ impl ConstantPool {
     }
 
     pub fn string_entry(&self, index: u16) -> Result<&String, ClassFileError> {
-        match &self.items[index as usize] {
+        match self.get_entry(index) {
             ConstantPoolEntry::String(value) => Ok(value),
             other => {
                 error!("Expected String at index {:?}, found {:?}", index, other);
@@ -61,7 +61,7 @@ impl ConstantPool {
     }
 
     pub fn class_ref_entry(&self, index: usize) -> Result<u16, ClassFileError> {
-        match &self.items[index] {
+        match self.get_entry(index as u16) {
             ConstantPoolEntry::ClassRef(value) => Ok(*value),
             other => {
                 error!("Expected Class at index {:?}, found {:?}", index, other);
@@ -71,7 +71,7 @@ impl ConstantPool {
     }
 
     pub fn name_type_entry(&self, index: usize) -> Result<NameTypeDescriptor, ClassFileError> {
-        match &self.items[index] {
+        match self.get_entry(index as u16) {
             ConstantPoolEntry::NameTypeDescriptor(value) => Ok(*value),
             other => {
                 error!(

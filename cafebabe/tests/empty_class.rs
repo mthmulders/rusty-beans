@@ -70,12 +70,12 @@ fn validate_constant_pool(class_file: &ClassFile) {
             }
             ConstantPoolEntry::MethodRef(method_ref) => {
                 let class_idx = pool
-                    .class_ref_entry(method_ref.class_ref as usize - 1)
+                    .class_ref_entry(method_ref.class_ref as usize)
                     .unwrap();
                 assert_string_class_name(&pool, class_idx);
 
                 let name_type_ref_idx = pool
-                    .name_type_entry(method_ref.name_type_ref as usize - 1)
+                    .name_type_entry(method_ref.name_type_ref as usize)
                     .unwrap();
                 assert_string_method_name(&pool, name_type_ref_idx.name_ref);
                 assert_type_descriptor(&pool, name_type_ref_idx.type_descriptor_ref);
@@ -93,7 +93,7 @@ fn validate_constant_pool(class_file: &ClassFile) {
 }
 
 fn assert_type_descriptor(pool: &ConstantPool, idx: u16) -> () {
-    let type_descriptor = pool.string_entry(idx - 1).unwrap();
+    let type_descriptor = pool.string_entry(idx).unwrap();
     assert_eq!(
         type_descriptor.contains("("),
         true,
@@ -107,7 +107,7 @@ fn assert_type_descriptor(pool: &ConstantPool, idx: u16) -> () {
 }
 
 fn assert_string_method_name(pool: &ConstantPool, idx: u16) -> () {
-    let method_name = pool.string_entry(idx - 1).unwrap();
+    let method_name = pool.string_entry(idx).unwrap();
     let is_constructor = "<init>".eq(method_name);
 
     assert_eq!(
@@ -116,7 +116,7 @@ fn assert_string_method_name(pool: &ConstantPool, idx: u16) -> () {
     );
 }
 fn assert_string_class_name(pool: &ConstantPool, idx: u16) -> () {
-    let class_name = pool.string_entry(idx - 1).unwrap();
+    let class_name = pool.string_entry(idx).unwrap();
     assert_eq!(
         class_name.contains('/'),
         true,
