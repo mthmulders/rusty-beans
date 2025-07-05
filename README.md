@@ -27,6 +27,15 @@ This project is split in a few subprojects:
 
 There is no documentation yet.
 
+## Status
+
+So far, the code can do the following:
+* The `cafebabe` module
+  * [X] parses the [constant pool table](https://en.wikipedia.org/wiki/Java_class_file#The_constant_pool) (but it ignores the two string-related differences from UTF-8).
+  * [X] parses the access flags for the class that is described by the class file.
+  * [X] parses the class name of the class that is described by the class file.
+  * [X] parses the "super" class name of the class that is described by the class file.
+
 ## License
 
 The code is licensed under the MIT license.
