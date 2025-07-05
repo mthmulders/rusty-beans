@@ -54,7 +54,7 @@ impl ConstantPool {
         match self.get_entry(index) {
             ConstantPoolEntry::String(value) => Ok(value),
             other => {
-                error!("Expected String at index {:?}, found {:?}", index, other);
+                error!("Expected String at index {index:?}, found {other:?}");
                 Err(ClassFileError::UnexpectedConstantPoolType)
             }
         }
@@ -64,7 +64,7 @@ impl ConstantPool {
         match self.get_entry(index as u16) {
             ConstantPoolEntry::ClassRef(value) => Ok(*value),
             other => {
-                error!("Expected Class at index {:?}, found {:?}", index, other);
+                error!("Expected Class at index {index:?}, found {other:?}");
                 Err(ClassFileError::UnexpectedConstantPoolType)
             }
         }
@@ -74,10 +74,7 @@ impl ConstantPool {
         match self.get_entry(index as u16) {
             ConstantPoolEntry::NameTypeDescriptor(value) => Ok(*value),
             other => {
-                error!(
-                    "Expected NameTypeDescriptor at index {:?}, found {:?}",
-                    index, other
-                );
+                error!("Expected NameTypeDescriptor at index {index:?}, found {other:?}");
                 Err(ClassFileError::UnexpectedConstantPoolType)
             }
         }
