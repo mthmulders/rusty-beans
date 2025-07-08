@@ -1,56 +1,59 @@
 use cafebabe::constant_pool::{ConstantPool, ConstantPoolEntry};
-use cafebabe::{AccessFlags, ClassFile, read_class_data};
+use cafebabe::{AccessFlags, ClassFile};
+use common::read_class_from_path;
 use common::setup_logging;
+use common::validate_class_name;
 
 mod common;
-
-use std::io::BufReader;
-use std::{fs::File, io::Read};
 
 static ACCESS_FLAGS: AccessFlags = AccessFlags::ACC_PUBLIC;
 
 #[test]
 fn reads_java8_empty_class() {
     setup_logging();
-    let class_file = reads_empty_class("res/java8/examples/EmptyClass.class");
+    let class_file = read_class_from_path("res/java8/examples/EmptyClass.class");
     assert_eq!(class_file.version.major, 52);
     validate_constant_pool(&class_file);
     validate_access_flags(&class_file);
-    validate_class_name(&class_file);
+    validate_class_name(&class_file, "examples/EmptyClass");
     validate_super_class_name(&class_file);
+    validate_no_interfaces(&class_file);
 }
 
 #[test]
 fn reads_java11_empty_class() {
     setup_logging();
-    let class_file = reads_empty_class("res/java11/examples/EmptyClass.class");
+    let class_file = read_class_from_path("res/java11/examples/EmptyClass.class");
     assert_eq!(class_file.version.major, 55);
     validate_constant_pool(&class_file);
     validate_access_flags(&class_file);
-    validate_class_name(&class_file);
+    validate_class_name(&class_file, "examples/EmptyClass");
     validate_super_class_name(&class_file);
+    validate_no_interfaces(&class_file);
 }
 
 #[test]
 fn reads_java17_empty_class() {
     setup_logging();
-    let class_file = reads_empty_class("res/java17/examples/EmptyClass.class");
+    let class_file = read_class_from_path("res/java17/examples/EmptyClass.class");
     assert_eq!(class_file.version.major, 61);
     validate_constant_pool(&class_file);
     validate_access_flags(&class_file);
-    validate_class_name(&class_file);
+    validate_class_name(&class_file, "examples/EmptyClass");
     validate_super_class_name(&class_file);
+    validate_no_interfaces(&class_file);
 }
 
 #[test]
 fn reads_java21_empty_class() {
     setup_logging();
-    let class_file = reads_empty_class("res/java21/examples/EmptyClass.class");
+    let class_file = read_class_from_path("res/java21/examples/EmptyClass.class");
     assert_eq!(class_file.version.major, 65);
     validate_constant_pool(&class_file);
     validate_access_flags(&class_file);
-    validate_class_name(&class_file);
+    validate_class_name(&class_file, "examples/EmptyClass");
     validate_super_class_name(&class_file);
+    validate_no_interfaces(&class_file);
 }
 
 fn validate_constant_pool(class_file: &ClassFile) {
@@ -99,22 +102,6 @@ fn validate_access_flags(class_file: &ClassFile) {
     );
 }
 
-fn validate_class_name(class_file: &ClassFile) {
-    let class_ref_idx = class_file.class.this_idx;
-    let class_name_idx = class_file
-        .constant_pool
-        .class_ref_entry(class_ref_idx)
-        .unwrap();
-    let class_name = class_file
-        .constant_pool
-        .string_entry(class_name_idx)
-        .unwrap();
-    assert_eq!(
-        class_name, "examples/EmptyClass",
-        "Expect class to be examples/EmptyClass"
-    );
-}
-
 fn validate_super_class_name(class_file: &ClassFile) {
     let class_ref_idx = class_file.class.super_idx;
     let class_name_idx = class_file
@@ -129,6 +116,11 @@ fn validate_super_class_name(class_file: &ClassFile) {
         class_name, "java/lang/Object",
         "Expect super class to be java/lang/Object"
     );
+}
+
+fn validate_no_interfaces(class_file: &ClassFile) {
+    let interfaces = &class_file.class.interfaces;
+    assert_eq!(interfaces.len(), 0);
 }
 
 fn assert_type_descriptor(pool: &ConstantPool, idx: u16) -> () {
@@ -162,15 +154,4 @@ fn assert_string_class_name(pool: &ConstantPool, idx: u16) -> () {
         true,
         "Class ref points to string in unexpected format"
     );
-}
-
-fn reads_empty_class(path: &str) -> ClassFile {
-    let file = File::open(path).expect("Can't open class file");
-    let mut reader = BufReader::new(file);
-    let mut data: Vec<u8> = Vec::new();
-    reader
-        .read_to_end(&mut data)
-        .expect("Can't read class file into memory");
-
-    read_class_data(&data).expect("Can't parse class file")
 }

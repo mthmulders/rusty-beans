@@ -27,6 +27,7 @@ bitflags! {
 pub struct ClassDefinition {
     pub this_idx: usize,
     pub super_idx: usize,
+    pub interfaces: Vec<usize>,
 }
 
 pub struct ClassFile {

@@ -35,6 +35,7 @@ So far, the code can do the following:
   * [X] parses the access flags for the class that is described by the class file.
   * [X] parses the class name of the class that is described by the class file.
   * [X] parses the "super" class name of the class that is described by the class file.
+  * [X] parses the implemented interface of the class that is described by the class file.
 
 ## License
 
