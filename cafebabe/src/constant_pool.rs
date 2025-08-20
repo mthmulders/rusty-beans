@@ -38,7 +38,7 @@ impl ConstantPool {
         &self.items[(index - 1) as usize]
     }
 
-    pub fn items(&self) -> Iter<ConstantPoolEntry> {
+    pub fn items(&self) -> Iter<'_, ConstantPoolEntry> {
         self.items.iter()
     }
 
