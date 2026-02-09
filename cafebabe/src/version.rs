@@ -13,7 +13,7 @@ pub fn read_version(data: &[u8]) -> Result<Version, ClassFileError> {
             Err(ClassFileError::MajorVersionTooLow)
         }
         0x2d..=0x37 => Ok(Version { major, minor }),
-        0x38..0x43 => match minor {
+        0x38..=0x45 => match minor {
             0 | 65535 => Ok(Version { major, minor }),
             _ => {
                 dbg!(minor);

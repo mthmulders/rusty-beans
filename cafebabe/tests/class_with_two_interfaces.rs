@@ -37,6 +37,14 @@ fn reads_java21_class_with_two_interfaces() {
     validate_interfaces(&class_file);
 }
 
+#[test]
+fn reads_java25_class_with_two_interfaces() {
+    setup_logging();
+    let class_file = read_class_from_path("res/java25/examples/ClassWithTwoInterfaces.class");
+    assert_eq!(class_file.version.major, 69);
+    validate_interfaces(&class_file);
+}
+
 fn validate_interfaces(class_file: &ClassFile) {
     let interfaces = &class_file.class.interfaces;
     assert_eq!(interfaces.len(), 2);

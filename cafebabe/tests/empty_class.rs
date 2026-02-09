@@ -56,6 +56,18 @@ fn reads_java21_empty_class() {
     validate_no_interfaces(&class_file);
 }
 
+#[test]
+fn reads_java25_empty_class() {
+    setup_logging();
+    let class_file = read_class_from_path("res/java25/examples/EmptyClass.class");
+    assert_eq!(class_file.version.major, 69);
+    validate_constant_pool(&class_file);
+    validate_access_flags(&class_file);
+    validate_class_name(&class_file, "examples/EmptyClass");
+    validate_super_class_name(&class_file);
+    validate_no_interfaces(&class_file);
+}
+
 fn validate_constant_pool(class_file: &ClassFile) {
     let pool = &class_file.constant_pool;
 
