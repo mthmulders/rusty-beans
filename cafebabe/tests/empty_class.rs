@@ -131,7 +131,7 @@ fn validate_super_class_name(class_file: &ClassFile) {
 }
 
 fn validate_no_interfaces(class_file: &ClassFile) {
-    let interfaces = &class_file.class.interfaces;
+    let interfaces = &class_file.class.interface_names;
     assert_eq!(interfaces.len(), 0);
 }
 

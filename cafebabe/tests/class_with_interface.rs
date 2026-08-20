@@ -45,9 +45,7 @@ fn reads_java25_class_with_interface() {
 }
 
 fn validate_interfaces(class_file: &ClassFile) {
-    let interfaces = &class_file.class.interfaces;
-    assert_eq!(interfaces.len(), 1);
-    let interface_name_idx = interfaces[0] as u16;
-    let interface_name = class_file.constant_pool.string_entry(interface_name_idx);
-    assert_eq!(interface_name.unwrap(), "java/io/Serializable");
+    let interface_names = &class_file.class.interface_names;
+    assert_eq!(interface_names.len(), 1);
+    assert_eq!(interface_names[0], "java/io/Serializable");
 }

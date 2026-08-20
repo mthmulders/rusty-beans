@@ -4,7 +4,6 @@ use common::setup_logging;
 
 mod common;
 
-// More than one artifact was produced. Please specify `--bin`, `--lib`, `--test` or `--example` flag explicitly.
 #[test]
 fn reads_java8_class_with_two_interfaces() {
     setup_logging();
@@ -46,14 +45,8 @@ fn reads_java25_class_with_two_interfaces() {
 }
 
 fn validate_interfaces(class_file: &ClassFile) {
-    let interfaces = &class_file.class.interfaces;
-    assert_eq!(interfaces.len(), 2);
-    let mut interface_names = Vec::new();
-    for interface_idx in 0..interfaces.len() {
-        let interface_name_idx = interfaces[interface_idx] as u16;
-        let interface_name = class_file.constant_pool.string_entry(interface_name_idx);
-        interface_names.push(interface_name.unwrap());
-    }
+    let interface_names = &class_file.class.interface_names;
+    assert_eq!(interface_names.len(), 2);
     assert_eq!(
         interface_names.contains(&&"java/io/Serializable".to_string()),
         true

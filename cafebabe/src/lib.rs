@@ -69,11 +69,12 @@ fn read_class_definition(
     let interface_end_idx = start_idx + 6usize + (2usize * interface_count as usize);
     let interfaces = read_interfaces(data, start_idx + 6, interface_end_idx, constant_pool);
 
-    let class_definition = ClassDefinition {
-        this_idx: this_idx as usize,
-        super_idx: super_idx as usize,
-        interfaces: interfaces?,
-    };
+    let class_definition = ClassDefinition::new(
+        this_idx as usize,
+        super_idx as usize,
+        interfaces?,
+        constant_pool,
+    );
     Ok((class_definition, start_idx + 4))
 }
 

@@ -27,7 +27,31 @@ bitflags! {
 pub struct ClassDefinition {
     pub this_idx: usize,
     pub super_idx: usize,
-    pub interfaces: Vec<usize>,
+    pub interface_names: Vec<String>,
+}
+
+fn interface_names(interfaces: Vec<usize>, constant_pool: &ConstantPool) -> Vec<String> {
+    interfaces
+        .iter()
+        .map(|interface_name_idx| constant_pool.string_entry(*interface_name_idx as u16))
+        .map(|result| result.expect("Failed to retrieve interface name from constant pool"))
+        .cloned()
+        .collect()
+}
+
+impl ClassDefinition {
+    pub fn new(
+        this_idx: usize,
+        super_idx: usize,
+        interfaces: Vec<usize>,
+        constant_pool: &ConstantPool,
+    ) -> ClassDefinition {
+        ClassDefinition {
+            this_idx,
+            super_idx,
+            interface_names: interface_names(interfaces, constant_pool),
+        }
+    }
 }
 
 pub struct ClassFile {
